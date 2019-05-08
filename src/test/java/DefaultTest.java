@@ -5,7 +5,8 @@ public class DefaultTest {
     @Test
     public void defaultTest() {}
 
-    @Test void defaultTestTestMethod1() {
+    @Test
+    public void defaultTestTestMethod1() {
         Default.method1();
     }
 }

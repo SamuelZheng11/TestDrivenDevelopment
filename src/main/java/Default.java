@@ -8,5 +8,7 @@ public class Default {
         System.out.println("Hello World");
     }
 
-    public static void method1() {}
+    public static void method1() {
+        return;
+    }
 }
