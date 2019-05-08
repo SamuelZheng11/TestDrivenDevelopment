@@ -6,7 +6,7 @@ public class DefaultTest {
     public void defaultTest() {}
 
     @Test
-    private void defaultTestTestMethod1() {
+    public void defaultTestTestMethod1() {
         Default.method1();
     }
 }
