@@ -1,4 +1,3 @@
-package PACKAGE_NAME;
-
-public class GitComment {
+public class GitComment implements GitDiscussion {
+    public GitComment(String comment){}
 }

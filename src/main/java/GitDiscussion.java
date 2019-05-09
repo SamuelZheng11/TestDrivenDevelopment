@@ -1,4 +1,2 @@
-package PACKAGE_NAME;
-
-public class GitDiscussion {
+public interface GitDiscussion {
 }

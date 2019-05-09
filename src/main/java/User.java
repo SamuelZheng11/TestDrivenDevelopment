@@ -1,4 +1,6 @@
-package PACKAGE_NAME;
-
 public class User {
+
+    public User(String name, UserType type){}
+
+    public boolean isSignedIn(){}
 }

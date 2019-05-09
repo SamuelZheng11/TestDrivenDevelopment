@@ -1,4 +1,3 @@
-package PACKAGE_NAME;
-
-public class GitCodeRequest {
+public class GitCodeRequest implements GitDiscussion {
+    public GitCodeRequest(String comment){}
 }

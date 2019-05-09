@@ -1,4 +1,4 @@
-package PACKAGE_NAME;
+public class GitBranch  implements IBranch {
 
-public class GitBranch {
+    public GitBranch(String name, GitCommit[] commits){}
 }
