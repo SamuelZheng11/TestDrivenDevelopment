@@ -145,7 +145,7 @@ public class AutomationTestSuite {
             File generatedCodeAbstraction = ae.generateCodeAbstractionFor(branch);
 
             String fileName = "ExpectedCodeAbstraction.txt";
-            String line = null;
+            String line;
             String expectedCodeAbstractionAsAString = "";
             String actualCodeAbstractionAsAString = "";
 
@@ -189,7 +189,7 @@ public class AutomationTestSuite {
             File generatedCodeAbstraction = ae.generateCodeAbstractionFor(branch);
 
             String fileName = "ExpectedCodeAbstraction.txt";
-            String line = null;
+            String line;
             String expectedCodeAbstractionAsAString = "";
             String actualCodeAbstractionAsAString = "";
 
