@@ -2,6 +2,8 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -74,10 +76,20 @@ public class AutomationTestSuite {
     public void AutomatedCodeInspectionAllPassTest() {
         try {
             String branch = "allPassMLCheckBranch";
-            MachineLearningModelParser.checkForSmallDefects(branch);
-            MachineLearningModelParser.checkForBadCodeSmells(branch);
-            MachineLearningModelParser.checkForSuspiciousCodeBlocks(branch);
-        } catch (MachineLearningModelException mlme) {
+            MachineLearningModelParser mlmp = new MachineLearningModelParser();
+
+            List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
+            if(anomalyLineNumbers.size() != 0) {
+                fail();
+            }
+
+            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalies(anomalyLineNumbers);
+            if (anomalyTypeMap.size() != 0) {
+                fail();
+            }
+
+            return;
+        } catch (Exception e) {
             fail();
         }
         return;
@@ -87,32 +99,42 @@ public class AutomationTestSuite {
     public void AutomatedCodeInspectionFailSmallDefectsTest() {
         try {
             String branch = "failSmallDefectsMLCheckBranch";
-            MachineLearningModelParser.checkForBadCodeSmells(branch);
-            MachineLearningModelParser.checkForSuspiciousCodeBlocks(branch);
-            MachineLearningModelParser.checkForSmallDefects(branch);
-        } catch (MachineLearningModelException mlme) {
-            if (mlme instanceof SmallDefectDetectedException) {
-                return;
-            } else {
-                fail();
+            MachineLearningModelParser mlmp = new MachineLearningModelParser();
+
+            List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
+            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalies(anomalyLineNumbers);
+
+            for (lineNumberSet: anomalyTypeMap) {
+                if (nomalyTypeMap.get(lineNumberSet) == AnomalyType.SmallDefect) {
+                    return;
+                }
             }
+
+            fail();
+        } catch (Exception e) {
+            fail();
         }
         fail();
     }
 
     @Test
-    public void AutomatedCodeInspectionFailSuspiciousCodeBlocksTest() {
+    public void AutomatedCodeInspectionFailMaliciousCodeBlocksTest() {
         try {
-            String branch = "failSuspiciousCodeBlocksMLCheckBranch";
-            MachineLearningModelParser.checkForBadCodeSmells(branch);
-            MachineLearningModelParser.checkForSmallDefects(branch);
-            MachineLearningModelParser.checkForSuspiciousCodeBlocks(branch);
-        } catch (MachineLearningModelException mlme) {
-            if (mlme instanceof SuspiciousCodeBlocksDetectedException) {
-                return;
-            } else {
-                fail();
+            String branch = "failMaliciousCodeBlocksMLCheckBranch";
+            MachineLearningModelParser mlmp = new MachineLearningModelParser();
+
+            List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
+            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalies(anomalyLineNumbers);
+
+            for (lineNumberSet: anomalyTypeMap) {
+                if (nomalyTypeMap.get(lineNumberSet) == AnomalyType.MaliciousCodeBlock) {
+                    return;
+                }
             }
+
+            fail();
+        } catch (Exception e) {
+            fail();
         }
         fail();
     }
@@ -121,15 +143,20 @@ public class AutomationTestSuite {
     public void AutomatedCodeInspectionFailBadCodeSmellsTest() {
         try {
             String branch = "failBadCodeSmellsMLCheckBranch";
-            MachineLearningModelParser.checkForSuspiciousCodeBlocks(branch);
-            MachineLearningModelParser.checkForSmallDefects(branch);
-            MachineLearningModelParser.checkForBadCodeSmells(branch);
-        } catch (MachineLearningModelException mlme) {
-            if (mlme instanceof BadCodeSmellsDetectedException) {
-                return;
-            } else {
-                fail();
+            MachineLearningModelParser mlmp = new MachineLearningModelParser();
+
+            List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
+            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalies(anomalyLineNumbers);
+
+            for (lineNumberSet: anomalyTypeMap) {
+                if (nomalyTypeMap.get(lineNumberSet) == AnomalyType.BadCodeSmell) {
+                    return;
+                }
             }
+
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         fail();
