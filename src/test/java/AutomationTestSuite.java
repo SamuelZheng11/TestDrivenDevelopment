@@ -75,7 +75,7 @@ public class AutomationTestSuite {
     @Test
     public void AutomatedCodeInspectionAllPassTest() {
         try {
-            String branch = "allPassMLCheckBranch";
+            Branch branch = new Branch("allPassMLCheckBranch");
             MachineLearningModelParser mlmp = new MachineLearningModelParser();
 
             List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
@@ -98,7 +98,7 @@ public class AutomationTestSuite {
     @Test
     public void AutomatedCodeInspectionFailSmallDefectsTest() {
         try {
-            String branch = "failSmallDefectsMLCheckBranch";
+            Branch branch = new Branch("failSmallDefectsMLCheckBranch");
             MachineLearningModelParser mlmp = new MachineLearningModelParser();
 
             List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
@@ -142,7 +142,7 @@ public class AutomationTestSuite {
     @Test
     public void AutomatedCodeInspectionFailBadCodeSmellsTest() {
         try {
-            String branch = "failBadCodeSmellsMLCheckBranch";
+            Branch branch = new Branch("failBadCodeSmellsMLCheckBranch");
             MachineLearningModelParser mlmp = new MachineLearningModelParser();
 
             List<List<Integer>> anomalyLineNumbers = mlmp.detectAnomalies(branch);
