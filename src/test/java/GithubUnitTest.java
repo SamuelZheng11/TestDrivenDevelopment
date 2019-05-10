@@ -1,6 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,19 +13,17 @@ public class GithubUnitTest {
 
     @Before public void initialize(){
         _github = GithubModule.getInstance();
-        _developer = new Developer();
-        String[] credentials = {"username", "password"};
-        _github.signIn(_developer, credentials);
+        _developer = new User("", UserType.Developer);
+        _github.signIn("username", "password");
     }
 
     //Requirement (1)
     @Test
     public void GithubSignInTest() {
         //Given
-        User developer = new Developer();
-        String[] credentials = {"username", "password"};
+        User developer = new User("", UserType.Developer);
         //When
-        _github.signIn(developer, credentials);
+        _github.signIn("username", "password");
         //Assert
         assertTrue(developer.isSignedIn());
     }
@@ -44,13 +44,13 @@ public class GithubUnitTest {
     public void GithubPullRequestFetchTest() {
         //Given
         String branchName = "GithubPullRequestFetchTest_Branch";
-        String committed_code = "GithubPullRequestFetchTest_Commit";
-        GitBranch branch = new GitBranch(branchName, new GitCommit("Commit Message", committed_code));
-        createPullRequest(branch);
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+        _github.createPullRequest(branch);
         //When
         PullRequest githubPR = _github.getPullRequest(branchName);
         //Assert
-        assertTrue(githubPR.source.contains(committed_code));
+        assertTrue(_github.getCommits(branchName).contains(committed_code[0]));
     }
 
 
@@ -59,35 +59,34 @@ public class GithubUnitTest {
     public void GithubAutomaticMergeOnApprovalTest() {
         //Given
         String branchName = "GithubPullRequestFetchTest_Branch";
-        String committed_code = "GithubPullRequestFetchTest_Commit";
-        GitBranch branch = new GitBranch(branchName, new GitCommit("Commit Message", committed_code));
-        createPullRequest(branch);
-        User approver = new Developer();
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+        _github.createPullRequest(branch);
+        User approver = new User("", UserType.Developer);
         //When
-        approvalPullRequest(branchName, approver);
+        _github.approvePullRequest(branchName, approver);
         //Assert
-        assertTrue(_github.master.contains(committed_code));
+        assertTrue(_github.getCommits("master").contains(committed_code));
         assertTrue(_github.getPullRequest(branchName).isCompleted());
     }
 
 
     //Requirement(4)
     @Test
-    public void defaultTestTestMethod1() {
+    public void AddCommentsAndCodeRequestsToGithubAutomaticallyTest() {
         //Given
         String branchName = "GithubPullRequestFetchTest_Branch";
-        String committed_code = "GithubPullRequestFetchTest_Commit";
-        GitBranch branch = new GitBranch(branchName, new GitCommit("Commit Message", committed_code));
-        Pullrequest pullrequest = createPullRequest(branch);
-        User commenter = new NonDeveloper();
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+        PullRequest pullrequest = _github.createPullRequest(branch);
+        User commenter = new User("", UserType.NonDeveloper);
         //When
-        String comment = "This code is great";
-        pullrequest.postComment(commenter, comment);
-        String request = "Please make line 34 better";
-        pullrequest.postCodeChangeRequest(commenter, request);
-        pullrequest.postNonDeveloperFeedback();
+        GitComment comment = new GitComment("This code is great");
+        pullrequest.postDiscussion(commenter, comment);
+        GitCodeRequest request = new GitCodeRequest("Please make line 34 better");
+        pullrequest.postDiscussion(commenter, request);
         //Assert
-        GithubDiscussion discussion = _github.getPullRequestDiscussion(branch);
+        List<GitDiscussion> discussion = _github.getPullRequestDiscussion(branchName);
         assertTrue(discussion.contains(comment));
         assertTrue(discussion.contains(request));
     }
