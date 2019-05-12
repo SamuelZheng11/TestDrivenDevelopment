@@ -1,3 +1,7 @@
+package Automation;
+
+import GitHub.IBranch;
+
 import java.io.File;
 
 public class AbstractionGenerationHandler implements AbstractionExtension {

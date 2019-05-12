@@ -1,3 +1,7 @@
+package Automation;
+
+import GitHub.IBranch;
+
 import java.util.ArrayList;
 import java.util.List;
 

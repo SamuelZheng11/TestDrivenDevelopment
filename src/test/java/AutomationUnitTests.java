@@ -1,3 +1,7 @@
+import Automation.*;
+import GitHub.GitBranch;
+import GitHub.GitCommit;
+import GitHub.IBranch;
 import org.junit.Test;
 
 import java.io.*;
@@ -18,7 +22,7 @@ public class AutomationUnitTests {
             String runnableCommand = "npm run lint";
             IBranch branch = new GitBranch("noLintNeededBranch", new GitCommit[]{});
             cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
-            ArrayList<String> results = cmd.runOnBranch(branch);
+            List<String> results = cmd.runOnBranch(branch);
 
             for (String result: results) {
                 if (result.equals("Linter completed with no linting errors")) {
@@ -27,7 +31,7 @@ public class AutomationUnitTests {
             }
 
             fail();
-        } catch (Excpetion e) {
+        } catch (Exception e) {
             fail();
         }
     }
@@ -48,7 +52,7 @@ public class AutomationUnitTests {
             }
 
             fail();
-        } catch (Excpetion e) {
+        } catch (Exception e) {
             fail();
         }
     }
@@ -77,7 +81,7 @@ public class AutomationUnitTests {
     public void AutomatedCodeInspectionAllPassTest() {
         try {
             IBranch branch = new GitBranch("allPassMLCheckBranch", new GitCommit[]{});
-            IMachineLearningModel mlmp = new MachineLearningModelHandler();
+            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
             Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
@@ -97,7 +101,7 @@ public class AutomationUnitTests {
         try {
 
             IBranch branch = new GitBranch("failSmallDefectsMLCheckBranch", new GitCommit[]{});
-            IMachineLearningModel mlmp = new MachineLearningModelHandler();
+            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
             Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
@@ -118,7 +122,7 @@ public class AutomationUnitTests {
     public void AutomatedCodeInspectionFailMaliciousCodeBlocksTest() {
         try {
             IBranch branch = new GitBranch("failMaliciousCodeBlocksMLCheckBranch", new GitCommit[]{});
-            IMachineLearningModel mlmp = new MachineLearningModelHandler();
+            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
             Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
@@ -139,7 +143,7 @@ public class AutomationUnitTests {
     public void AutomatedCodeInspectionFailBadCodeSmellsTest() {
         try {
             IBranch branch = new GitBranch("failBadCodeSmellsMLCheckBranch", new GitCommit[]{});
-            IMachineLearningModel mlmp = new MachineLearningModelHandler();
+            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
             Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
