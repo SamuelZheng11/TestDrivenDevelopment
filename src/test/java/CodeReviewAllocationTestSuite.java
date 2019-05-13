@@ -10,7 +10,6 @@ public class CodeReviewAllocationTestSuite {
         developer = new Developer();
     }
 
-    //requirement 1:
     /* The developer can add/delete one or more non-developer reviewers in this tool. A database is used to store
      * the reviewers’ information.
      */
@@ -18,35 +17,48 @@ public class CodeReviewAllocationTestSuite {
     @Test(expected = NoAuthorityException)
     public void TestNonDeveloperFailCreate() {
         User user = new User();
-        PullRequest pr = user.createPullRequest();
+        PullRequest pr = user.createPullRequest(branch);
         Assert.fail();
     }
 
     //Testing a user cannot add a developer to a pr thats not thiers
     @Test(expected = NoAuthorityException)
-    public void TestUser() {
+    public void TestNonPRCreaterTryToAddCodeReviewer() {
         Developer developer = new Developer();
         User user = new User();
-        PullRequest pr = developer.createPullRequest();
+        PullRequest pr = developer.createPullRequest(branch);
         user.addCodeReviewer(pr, developer);
+        Assert.fail();
     }
 
-    //Testing a user cannot add a developer to a pr thats not thiers
+    //Testing developer add/remove a code reviewer
     @Test
-    public void TestUser() {
+    public void TestDeveloperCanAddCodeReviewer() {
         Developer developer = new Developer();
         User user = new User();
-        PullRequest pr = developer.createPullRequest();
+        PullRequest pr = developer.createPullRequest(branch);
+        developer.addCodeReviewer(pr, user);
+    }
+
+    //Testing developer add/remove a code reviewer
+    @Test
+    public void TestDeveloperCanAddCodeReviewer() {
+        Developer developer = new Developer();
+        User user = new User();
+        PullRequest pr = developer.createPullRequest(branch);
         developer.addCodeReviewer(pr, user);
         developer.removeCodeReviewer(pr, user);
     }
 
+    //Testing a user cannot remove code reviewer from a pr thats not thiers
     @Test(expected = NoAuthorityException)
     public void TestUser() {
         Developer developer = new Developer();
         User user = new User();
-        PullRequest pr = developer.createPullRequest();
-        user.removeCodeReviewer(pr, developer);
+        User user1 = new User();
+        PullRequest pr = developer.createPullRequest(branch);
+        developer.addCodeReviewer(pr, user1);
+        user.removeCodeReviewer(pr, user1);
     }
 
 
@@ -61,20 +73,18 @@ public class CodeReviewAllocationTestSuite {
         Developer developer = new Developer();
 
         User user = new User();
-        user.setReviews(10);
-        user.setReviews(0);
 
-        PullRequest pr = developer.createPullRequest();
+        PullRequest pr = developer.createPullRequest(branch);
         pr.randomAllocateReviewer();
-        List<User> user = pr.getReviwers();
+        ArrayList<User> users = pr.getReviwers();
         if(users.length() >0){
             for (User u : users){
                 if(u == null){
-                    Assert.fail();
+                    Assert.fail("There are no code reviewers");
                 }
             }
         }else{
-            Assert.fail();
+            Assert.fail("No code reviewer was randomly allocated");
         }
     }
 
@@ -85,16 +95,13 @@ public class CodeReviewAllocationTestSuite {
     public void TestUser() {
         Developer developer = new Developer();
 
-        User user = new User();
+        User user = new User(); //How to get user before random allocation???????????????????????
         int initialReviewCount = user.getReviewCount();
 
-        PullRequest pr = developer.createPullRequest();
+        PullRequest pr = developer.createPullRequest(branch);
         User user = pr.randomAllocateReviewer();
         Assert.assertEquals(user.getReviewCount(), initialReviewCount+1);
 
     }
-
-    //make database check?
-
 
 }
