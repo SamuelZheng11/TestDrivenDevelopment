@@ -2,63 +2,88 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CodeReviewAllocationTestSuite {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    Developer developer;
+public class CodeReviewAllocationTestSuite {
+    private GithubModule _github;
+
     @Before
-    public void createDeveloper(){
-        developer = new Developer();
+    public void initialize(){
+        _github = GithubModule.getInstance();
     }
 
     /* The developer can add/delete one or more non-developer reviewers in this tool. A database is used to store
      * the reviewers’ information.
      */
     //Testing non-developer should not be able to create a pull request
-    @Test(expected = NoAuthorityException)
+    @Test(expected = NoAuthorityException.class)
     public void TestNonDeveloperFailCreate() {
-        User user = new User();
-        PullRequest pr = user.createPullRequest(branch);
+        User user = new User("", UserType.NonDeveloper);
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+        _github.createPullRequest(user, branch);
         Assert.fail();
     }
 
     //Testing a user cannot add a developer to a pr thats not thiers
-    @Test(expected = NoAuthorityException)
+    @Test(expected = NoAuthorityException.class)
     public void TestNonPRCreaterTryToAddCodeReviewer() {
-        Developer developer = new Developer();
-        User user = new User();
-        PullRequest pr = developer.createPullRequest(branch);
-        user.addCodeReviewer(pr, developer);
+        User developer = new User("", UserType.Developer);
+        User user = new User("", UserType.NonDeveloper);
+        User cr = new User("", UserType.NonDeveloper);
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+
+        PullRequest pullRequest = _github.createPullRequest(developer, branch);
+        pullRequest.addCodeReviwer(user, cr);
         Assert.fail();
     }
 
-    //Testing developer add/remove a code reviewer
     @Test
     public void TestDeveloperCanAddCodeReviewer() {
-        Developer developer = new Developer();
-        User user = new User();
-        PullRequest pr = developer.createPullRequest(branch);
-        developer.addCodeReviewer(pr, user);
+        User developer = new User("", UserType.Developer);
+        User user = new User("", UserType.NonDeveloper);
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+
+        PullRequest pullRequest = _github.createPullRequest(developer, branch);
+        pullRequest.addCodeReviwer(developer, user);
+
     }
 
-    //Testing developer add/remove a code reviewer
     @Test
-    public void TestDeveloperCanAddCodeReviewer() {
-        Developer developer = new Developer();
-        User user = new User();
-        PullRequest pr = developer.createPullRequest(branch);
-        developer.addCodeReviewer(pr, user);
-        developer.removeCodeReviewer(pr, user);
+    public void TestDeveloperCanRemoveCodeReviewer() {
+        User developer = new User("", UserType.Developer);
+        User user = new User("", UserType.NonDeveloper);
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+
+        PullRequest pullRequest = _github.createPullRequest(developer, branch);
+        pullRequest.addCodeReviwer(developer, user);
+        pullRequest.removeCodeReviwer(developer, user);
     }
 
     //Testing a user cannot remove code reviewer from a pr thats not thiers
-    @Test(expected = NoAuthorityException)
-    public void TestUser() {
-        Developer developer = new Developer();
-        User user = new User();
-        User user1 = new User();
-        PullRequest pr = developer.createPullRequest(branch);
-        developer.addCodeReviewer(pr, user1);
-        user.removeCodeReviewer(pr, user1);
+    @Test(expected = NoAuthorityException.class)
+    public void TestNonPRCreatorCantRemoveCR() {
+
+        User developer = new User("", UserType.Developer);
+        User user = new User("", UserType.NonDeveloper);
+        User cr = new User("", UserType.NonDeveloper);
+
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+
+        PullRequest pullRequest = _github.createPullRequest(developer, branch);
+        pullRequest.addCodeReviwer(developer, cr);
+        pullRequest.removeCodeReviwer(user, cr);
+
     }
 
 
@@ -69,15 +94,18 @@ public class CodeReviewAllocationTestSuite {
 
     //how to check randomness?
     @Test
-    public void TestUser() {
-        Developer developer = new Developer();
+    public void TestRandomAllocateCRerToPR() {
+        User developer = new User("", UserType.Developer);
 
-        User user = new User();
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
 
-        PullRequest pr = developer.createPullRequest(branch);
+        PullRequest pr = _github.createPullRequest(developer, branch);
+
         pr.randomAllocateReviewer();
-        ArrayList<User> users = pr.getReviwers();
-        if(users.length() >0){
+        ArrayList<User> users = pr.getCodeReviwers();
+        if(users.size() > 0){
             for (User u : users){
                 if(u == null){
                     Assert.fail("There are no code reviewers");
@@ -93,14 +121,26 @@ public class CodeReviewAllocationTestSuite {
     * */
     @Test
     public void TestUser() {
-        Developer developer = new Developer();
+        User developer = new User("", UserType.Developer);
 
-        User user = new User(); //How to get user before random allocation???????????????????????
-        int initialReviewCount = user.getReviewCount();
+        ArrayList<User> allUsers = Database.getInstance().getAllUsers();
+        HashMap<User, Integer> userReviewCountMap = new HashMap<User, Integer>();
+        //getting all review counts of all users
+        for( User u:allUsers){
+            userReviewCountMap.put(u, u.getReviewCount());
+        }
 
-        PullRequest pr = developer.createPullRequest(branch);
-        User user = pr.randomAllocateReviewer();
-        Assert.assertEquals(user.getReviewCount(), initialReviewCount+1);
+        String branchName = "GithubPullRequestFetchTest_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        GitBranch branch = new GitBranch(branchName, committed_code);
+
+        PullRequest pr = _github.createPullRequest(developer, branch);
+
+        pr.randomAllocateReviewer();
+        ArrayList<User> users = pr.getCodeReviwers();
+        User codeReviewer = users.get(0);
+        int initialReviewCount = userReviewCountMap.get(codeReviewer);
+        Assert.assertEquals(codeReviewer.getReviewCount(), initialReviewCount+1);
 
     }
 

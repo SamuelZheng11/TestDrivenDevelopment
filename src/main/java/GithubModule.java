@@ -38,4 +38,6 @@ public class GithubModule {
 
     }
 
+    public PullRequest createPullRequest(User user, GitBranch branch) {
+    }
 }
