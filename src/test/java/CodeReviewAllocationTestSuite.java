@@ -20,8 +20,8 @@ public class CodeReviewAllocationTestSuite {
     @Test(expected = NoAuthorityException.class)
     public void TestNonDeveloperFailCreate() {
         User user = new User("", UserType.NonDeveloper);
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
         _github.createPullRequest(user, branch);
         Assert.fail();
@@ -33,8 +33,8 @@ public class CodeReviewAllocationTestSuite {
         User developer = new User("", UserType.Developer);
         User user = new User("", UserType.NonDeveloper);
         User cr = new User("", UserType.NonDeveloper);
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
 
         PullRequest pullRequest = _github.createPullRequest(developer, branch);
@@ -46,8 +46,8 @@ public class CodeReviewAllocationTestSuite {
     public void TestDeveloperCanAddCodeReviewer() {
         User developer = new User("", UserType.Developer);
         User user = new User("", UserType.NonDeveloper);
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
 
         PullRequest pullRequest = _github.createPullRequest(developer, branch);
@@ -59,8 +59,8 @@ public class CodeReviewAllocationTestSuite {
     public void TestDeveloperCanRemoveCodeReviewer() {
         User developer = new User("", UserType.Developer);
         User user = new User("", UserType.NonDeveloper);
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
 
         PullRequest pullRequest = _github.createPullRequest(developer, branch);
@@ -76,8 +76,8 @@ public class CodeReviewAllocationTestSuite {
         User user = new User("", UserType.NonDeveloper);
         User cr = new User("", UserType.NonDeveloper);
 
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
 
         PullRequest pullRequest = _github.createPullRequest(developer, branch);
@@ -97,8 +97,8 @@ public class CodeReviewAllocationTestSuite {
     public void TestRandomAllocateCRerToPR() {
         User developer = new User("", UserType.Developer);
 
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
 
         PullRequest pr = _github.createPullRequest(developer, branch);
@@ -118,15 +118,15 @@ public class CodeReviewAllocationTestSuite {
     public void TestUser() {
         User developer = new User("", UserType.Developer);
 
-        ArrayList<User> allUsers = Database.getInstance().getAllUsers();
+        ArrayList<User> allUsers = DatabaseManager.getAllUsers();
         HashMap<User, Integer> userReviewCountMap = new HashMap<User, Integer>();
         //getting all review counts of all users
         for( User u:allUsers){
             userReviewCountMap.put(u, u.getReviewCount());
         }
 
-        String branchName = "GithubPullRequestFetchTest_Branch";
-        GitCommit[] committed_code = {new GitCommit("Commit Message", "GithubPullRequestFetchTest_Commit")};
+        String branchName = "Developer_Branch";
+        GitCommit[] committed_code = {new GitCommit("Commit Message", "Developer_Commit")};
         GitBranch branch = new GitBranch(branchName, committed_code);
 
         PullRequest pr = _github.createPullRequest(developer, branch);
