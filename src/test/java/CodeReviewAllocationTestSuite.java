@@ -105,15 +105,10 @@ public class CodeReviewAllocationTestSuite {
 
         pr.randomAllocateReviewer();
         ArrayList<User> users = pr.getCodeReviwers();
-        if(users.size() > 0){
-            for (User u : users){
-                if(u == null){
-                    Assert.fail("There are no code reviewers");
-                }
-            }
-        }else{
-            Assert.fail("No code reviewer was randomly allocated");
+        if(users.size() != 1){
+            Assert.fail("Random allocation did not allocate ONE code reviewer");
         }
+        Assert.assertNotNull(users.get(0));
     }
 
 
