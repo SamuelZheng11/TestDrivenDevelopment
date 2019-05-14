@@ -15,6 +15,9 @@ import static org.junit.Assert.fail;
 
 public class AutomationUnitTests {
 
+    /**
+     * Requirement #: 5
+     */
     @Test
     public void noLintNeededTest() {
         CommandLineRunner cmd = new CommandLineRunner();
@@ -32,6 +35,9 @@ public class AutomationUnitTests {
         fail();
     }
 
+    /**
+     * Requirement #: 5
+     */
     @Test
     public void lintAutoFixTest() {
         CommandLineRunner cmd = new CommandLineRunner();
@@ -49,6 +55,9 @@ public class AutomationUnitTests {
         fail();
     }
 
+    /**
+     * Requirement #: 5
+     */
     @Test
     public void LinterRequiresFurtherAssistanceTest() {
         CommandLineRunner cmd = new CommandLineRunner();
@@ -65,6 +74,9 @@ public class AutomationUnitTests {
         return;
     }
 
+    /**
+     * Requirement #: 6
+     */
     @Test
     public void AutomatedCodeInspectionAllPassTest() {
         IBranch branch = new GitBranch("allPassMLCheckBranch", new GitCommit[]{});
@@ -95,6 +107,9 @@ public class AutomationUnitTests {
         fail();
     }
 
+    /**
+     * Requirement #: 6
+     */
     @Test
     public void AutomatedCodeInspectionFailMaliciousCodeBlocksTest() {
         IBranch branch = new GitBranch("failMaliciousCodeBlocksMLCheckBranch", new GitCommit[]{});
@@ -111,6 +126,9 @@ public class AutomationUnitTests {
         fail();
     }
 
+    /**
+     * Requirement #: 6
+     */
     @Test
     public void AutomatedCodeInspectionFailBadCodeSmellsTest() {
         IBranch branch = new GitBranch("failBadCodeSmellsMLCheckBranch", new GitCommit[]{});
@@ -128,7 +146,9 @@ public class AutomationUnitTests {
     }
 
 
-    // need to talk to team about how to get branch
+    /**
+     * Requirement #: 7
+     */
     @Test
 public void TestGenerateCodeAbstractionPassTest() {
         AbstractionExtension ae = new AbstractionGenerationHandler();
@@ -169,6 +189,9 @@ public void TestGenerateCodeAbstractionPassTest() {
         assertEquals(expectedCodeAbstractionAsAString, actualCodeAbstractionAsAString);
     }
 
+    /**
+     * Requirement #: 7
+     */
     @Test
     public void TestGenerateCodeAbstractionUnexpectedLineFailTest() {
         AbstractionExtension ae = new AbstractionGenerationHandler();
