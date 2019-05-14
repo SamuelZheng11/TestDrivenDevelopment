@@ -17,145 +17,111 @@ public class AutomationUnitTests {
 
     @Test
     public void noLintNeededTest() {
-        try {
-            CommandLineRunner cmd = new CommandLineRunner();
-            String runnableCommand = "npm run lint";
-            IBranch branch = new GitBranch("noLintNeededBranch", new GitCommit[]{});
-            cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
-            List<String> results = cmd.runOnBranch(branch);
+        CommandLineRunner cmd = new CommandLineRunner();
+        String runnableCommand = "npm run lint";
+        IBranch branch = new GitBranch("noLintNeededBranch", new GitCommit[]{});
+        cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
+        List<String> results = cmd.runOnBranch(branch);
 
-            for (String result: results) {
-                if (result.equals("Linter completed with no linting errors")) {
-                    return;
-                }
+        for (String result: results) {
+            if (result.equals("Linter completed with no linting errors")) {
+                return;
             }
-
-            fail();
-        } catch (Exception e) {
-            fail();
         }
+
+        fail();
     }
 
     @Test
     public void lintAutoFixTest() {
-        try {
-            CommandLineRunner cmd = new CommandLineRunner();
-            String runnableCommand = "npm run lint";
-            IBranch branch = new GitBranch("lintAutoFixBranch", new GitCommit[]{});
-            cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
-            List<String> results = cmd.runOnBranch(branch);
+        CommandLineRunner cmd = new CommandLineRunner();
+        String runnableCommand = "npm run lint";
+        IBranch branch = new GitBranch("lintAutoFixBranch", new GitCommit[]{});
+        cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
+        List<String> results = cmd.runOnBranch(branch);
 
-            for (String result: results) {
-                if (result.equals("Linter completed with no linting errors")) {
-                    return;
-                }
+        for (String result: results) {
+            if (result.equals("Linter completed with no linting errors")) {
+                return;
             }
-
-            fail();
-        } catch (Exception e) {
-            fail();
         }
+
+        fail();
     }
 
     @Test
     public void LinterRequiresFurtherAssistanceTest() {
-        try {
-            CommandLineRunner cmd = new CommandLineRunner();
-            String runnableCommand = "npm run lint";
-            IBranch branch = new GitBranch("linterRequiresFurtherAssistanceBranch", new GitCommit[]{});
-            cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
-            List<String> results = cmd.runOnBranch(branch);
+        CommandLineRunner cmd = new CommandLineRunner();
+        String runnableCommand = "npm run lint";
+        IBranch branch = new GitBranch("linterRequiresFurtherAssistanceBranch", new GitCommit[]{});
+        cmd.setCommand(new ArrayList<String>(Arrays.asList(runnableCommand)));
+        List<String> results = cmd.runOnBranch(branch);
 
-            for (String result: results) {
-                if (result.equals("Linter completed with no linting errors")) {
-                    fail();
-                }
-            }
-            return;
-        } catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void AutomatedCodeInspectionAllPassTest() {
-        try {
-            IBranch branch = new GitBranch("allPassMLCheckBranch", new GitCommit[]{});
-            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
-
-            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
-
-            if (anomalyTypeMap.size() != 0) {
+        for (String result: results) {
+            if (result.equals("Linter completed with no linting errors")) {
                 fail();
             }
-
-            return;
-        } catch (Exception e) {
-            fail();
         }
         return;
     }
 
     @Test
-    public void AutomatedCodeInspectionFailSmallDefectsTest() {
-        try {
+    public void AutomatedCodeInspectionAllPassTest() {
+        IBranch branch = new GitBranch("allPassMLCheckBranch", new GitCommit[]{});
+        MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
-            IBranch branch = new GitBranch("failSmallDefectsMLCheckBranch", new GitCommit[]{});
-            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
+        Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
-            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
-
-            for (List<Integer> lineNumberSet: anomalyTypeMap.keySet()) {
-                if (anomalyTypeMap.get(lineNumberSet) == AnomalyType.SmallDefect) {
-                    return;
-                }
-            }
-
-            fail();
-        } catch (Exception e) {
+        if (anomalyTypeMap.size() != 0) {
             fail();
         }
+
+        return;
+    }
+
+    @Test
+    public void AutomatedCodeInspectionFailSmallDefectsTest() {
+        IBranch branch = new GitBranch("failSmallDefectsMLCheckBranch", new GitCommit[]{});
+        MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
+
+        Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
+
+        for (List<Integer> lineNumberSet: anomalyTypeMap.keySet()) {
+            if (anomalyTypeMap.get(lineNumberSet) == AnomalyType.SmallDefect) {
+                return;
+            }
+        }
+
         fail();
     }
 
     @Test
     public void AutomatedCodeInspectionFailMaliciousCodeBlocksTest() {
-        try {
-            IBranch branch = new GitBranch("failMaliciousCodeBlocksMLCheckBranch", new GitCommit[]{});
-            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
+        IBranch branch = new GitBranch("failMaliciousCodeBlocksMLCheckBranch", new GitCommit[]{});
+        MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
-            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
+        Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
-            for (List<Integer> lineNumberSet: anomalyTypeMap.keySet()) {
-                if (anomalyTypeMap.get(lineNumberSet) == AnomalyType.MaliciousCodeBlock) {
-                    return;
-                }
+        for (List<Integer> lineNumberSet: anomalyTypeMap.keySet()) {
+            if (anomalyTypeMap.get(lineNumberSet) == AnomalyType.MaliciousCodeBlock) {
+                return;
             }
-
-            fail();
-        } catch (Exception e) {
-            fail();
         }
+
         fail();
     }
 
     @Test
     public void AutomatedCodeInspectionFailBadCodeSmellsTest() {
-        try {
-            IBranch branch = new GitBranch("failBadCodeSmellsMLCheckBranch", new GitCommit[]{});
-            MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
+        IBranch branch = new GitBranch("failBadCodeSmellsMLCheckBranch", new GitCommit[]{});
+        MachineLearningModelHandler mlmp = new MachineLearningModelHandler();
 
-            Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
+        Map<List<Integer>, AnomalyType> anomalyTypeMap = mlmp.identifyAnomalyLines(branch);
 
-            for (List<Integer> lineNumberSet: anomalyTypeMap.keySet()) {
-                if (anomalyTypeMap.get(lineNumberSet) == AnomalyType.BadCodeSmell) {
-                    return;
-                }
+        for (List<Integer> lineNumberSet: anomalyTypeMap.keySet()) {
+            if (anomalyTypeMap.get(lineNumberSet) == AnomalyType.BadCodeSmell) {
+                return;
             }
-
-            fail();
-        } catch (Exception e) {
-            fail();
         }
 
         fail();
@@ -164,93 +130,82 @@ public class AutomationUnitTests {
 
     // need to talk to team about how to get branch
     @Test
-    public void TestGenerateCodeAbstractionPassTest() {
+public void TestGenerateCodeAbstractionPassTest() {
+        AbstractionExtension ae = new AbstractionGenerationHandler();
+        IBranch branch = new GitBranch("passCodeAbstractionGenerationBranch", new GitCommit[]{});
+        File generatedCodeFile = ae.generateCodeAbstractionFor(branch);
+
+        String fileName = "ExpectedCodeAbstraction.txt";
+        String line;
+        String expectedCodeAbstractionAsAString = "";
+        String actualCodeAbstractionAsAString = "";
+
         try {
-            AbstractionExtension ae = new AbstractionGenerationHandler();
-            IBranch branch = new GitBranch("passCodeAbstractionGenerationBranch", new GitCommit[]{});
-            File generatedCodeFile = ae.generateCodeAbstractionFor(branch);
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            String fileName = "ExpectedCodeAbstraction.txt";
-            String line;
-            String expectedCodeAbstractionAsAString = "";
-            String actualCodeAbstractionAsAString = "";
-
-            try {
-                FileReader fileReader = new FileReader(fileName);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                while((line = bufferedReader.readLine()) != null) {
-                    expectedCodeAbstractionAsAString += line;
-                }
-
-                bufferedReader.close();
-
-                fileReader = new FileReader(generatedCodeFile);
-                bufferedReader = new BufferedReader(fileReader);
-
-                while((line = bufferedReader.readLine()) != null) {
-                    actualCodeAbstractionAsAString += line;
-                }
-
-                bufferedReader.close();
-            }
-            catch(FileNotFoundException ex) {
-                fail();
-            }
-            catch(IOException ex) {
-                fail();
+            while((line = bufferedReader.readLine()) != null) {
+                expectedCodeAbstractionAsAString += line;
             }
 
-            assertEquals(expectedCodeAbstractionAsAString, actualCodeAbstractionAsAString);
-        } catch (Exception e) {
+            bufferedReader.close();
+
+            fileReader = new FileReader(generatedCodeFile);
+            bufferedReader = new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null) {
+                actualCodeAbstractionAsAString += line;
+            }
+
+            bufferedReader.close();
+        }
+        catch(FileNotFoundException ex) {
             fail();
         }
+        catch(IOException ex) {
+            fail();
+        }
+
+        assertEquals(expectedCodeAbstractionAsAString, actualCodeAbstractionAsAString);
     }
 
     @Test
     public void TestGenerateCodeAbstractionUnexpectedLineFailTest() {
+        AbstractionExtension ae = new AbstractionGenerationHandler();
+        IBranch branch = new GitBranch("failCodeAbstractionGenerationBranch", new GitCommit[]{});
+        File generatedCodeFile = ae.generateCodeAbstractionFor(branch);
+
+        String fileName = "ExpectedCodeAbstraction.txt";
+        String line;
+        String expectedCodeAbstractionAsAString = "";
+        String actualCodeAbstractionAsAString = "";
+
         try {
-            AbstractionExtension ae = new AbstractionGenerationHandler();
-            IBranch branch = new GitBranch("failCodeAbstractionGenerationBranch", new GitCommit[]{});
-            File generatedCodeFile = ae.generateCodeAbstractionFor(branch);
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            String fileName = "ExpectedCodeAbstraction.txt";
-            String line;
-            String expectedCodeAbstractionAsAString = "";
-            String actualCodeAbstractionAsAString = "";
-
-            try {
-                FileReader fileReader = new FileReader(fileName);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                while((line = bufferedReader.readLine()) != null) {
-                    expectedCodeAbstractionAsAString += line;
-                }
-
-                bufferedReader.close();
-
-                fileReader = new FileReader(generatedCodeFile);
-                bufferedReader = new BufferedReader(fileReader);
-
-                while((line = bufferedReader.readLine()) != null) {
-                    actualCodeAbstractionAsAString += line;
-                }
-
-                bufferedReader.close();
-            }
-            catch(FileNotFoundException ex) {
-                fail();
-            }
-            catch(IOException ex) {
-                fail();
+            while((line = bufferedReader.readLine()) != null) {
+                expectedCodeAbstractionAsAString += line;
             }
 
-            assertEquals(expectedCodeAbstractionAsAString, actualCodeAbstractionAsAString);
-        } catch (AssertionError e) {
-            return;
+            bufferedReader.close();
+
+            fileReader = new FileReader(generatedCodeFile);
+            bufferedReader = new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null) {
+                actualCodeAbstractionAsAString += line;
+            }
+
+            bufferedReader.close();
+        }
+        catch(FileNotFoundException ex) {
+            fail();
+        }
+        catch(IOException ex) {
+            fail();
         }
 
-        fail();
+        assertEquals(expectedCodeAbstractionAsAString, actualCodeAbstractionAsAString);
     }
-
 }
