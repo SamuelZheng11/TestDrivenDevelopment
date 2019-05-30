@@ -1,0 +1,4 @@
+If student's grade is greater than or equal to 60
+    Print "passed"
+else
+    Print "failed"

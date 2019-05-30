@@ -1,24 +1,41 @@
-import java.util.ArrayList;
+import java.util.List;
 
 public class PullRequest {
 
-    public boolean isCompleted(){
+    private boolean _completed = false;
+    
+    public PullRequest(User user, String title, GitBranch source, GitBranch target){
 
     }
-
-    public void postDiscussion(User submitter, GitDiscussion discussion){
-
+    public void postComment(GitComment discussion){
     }
 
-    public void addCodeReviwer(User user, User cr) {
+    public void setCompletedStatus(boolean status){
+        _completed = status;
     }
 
-    public void removeCodeReviwer(User developer, User user) {
+    public boolean isCompleted() {
+        return _completed;
     }
 
-    public void randomAllocateReviewer() {
+    public CodeReviewAllocation createCodeReview(User requester, User codeReviewer){
+        return null;
     }
 
-    public ArrayList<User> getCodeReviwers() {
+
+    public void addCodeReview(CodeReviewAllocation codeReviewAllocation) {
     }
+
+    public void removeCodeReviwer(User developer, User nonDeveloper) {
+    }
+
+    public void removeCodeReviwer(User developer, List<User> reviewers) {
+    }
+
+    public List<User> getCodeReviewers(){return null;};
+
+    public List<CodeReviewAllocation> createCodeReview(User requester, List<User> codeReviewers){
+        return null;
+    }
+
 }

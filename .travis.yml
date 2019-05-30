@@ -3,6 +3,8 @@ language: java
 jdk:
 - oraclejdk8
 
+services: mongodb
+
 script:
   - "mvn clean verify"
   - "mvn cobertura:cobertura"
