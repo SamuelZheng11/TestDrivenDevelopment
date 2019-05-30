@@ -42,7 +42,7 @@ public class ReviewerPersistence {
     }
 
     public void updateReviewCount(User codeReviewer){
-        Document updatedUserCount = new Document(FIRST_NAME_KEY, codeReviewer.getName()).append(REVIEW_COUNT_KEY, codeReviewer.getReviewCount()).append(USERTYPE_KEY, UserType.NonDeveloper);
+        Document updatedUserCount = new Document(FIRST_NAME_KEY, codeReviewer.getName()).append(REVIEW_COUNT_KEY, codeReviewer.getReviewCount()).append(USERTYPE_KEY, UserType.NonDeveloper.ordinal());
         mongoCollection.updateOne(eq(FIRST_NAME_KEY, codeReviewer.getName()), updatedUserCount);
     }
 
